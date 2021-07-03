@@ -14,6 +14,7 @@ router.post("/book", async (req, res) => {
     const room = new roomModel(req.body);
     const checkRoom = await roomModel.findById({ _id: req.body.roomId });
 
+   
     // if((req.body.startTime.includes('pm')||req.body.endTime.includes('pm')){
     //     req
     // }
@@ -31,6 +32,7 @@ router.post("/book", async (req, res) => {
       if(start<now){
           return res.json({message:'the given date is expired'})
       }
+
       if (end <= start) {
         return res.json({
           message: "startTime is greater than or equal to endTime",
@@ -48,7 +50,7 @@ router.post("/book", async (req, res) => {
           .findByIdAndUpdate(
             { _id: req.body.roomId },
             {
-              $push: { bookings: user.id },
+              $addToSet: { bookings: user.id },
             },
             { new: true }
           )
@@ -59,6 +61,7 @@ router.post("/book", async (req, res) => {
     } else {
       if (checkRoom.bookings) {
         const room = await userModel.find({ _id: checkRoom.bookings });
+
 
         var startDate = new Date(`${req.body.startDate}`);
         var endDate = new Date(`${req.body.endDate}`);
@@ -92,12 +95,19 @@ router.post("/book", async (req, res) => {
           var d2 = new Date(`${req.body.startDate} ` + `${req.body.startTime}`);
           var d3 = new Date(`${req.body.endDate} ` + `${req.body.endTime}`);
 
-          if ((d2 < d0 && d3 <= d0) || (d2 < d1 && d3 <= d3)) {
+          if ((d2 < d0 && d3 <= d0) || (d2 < d1 && d3 <= d1)) {
             return true;
           }
         });
+           console.log(!roomCheck);
+        if (roomCheck) {
+          
 
-        if (!roomCheck) {
+          return res.json({
+            message:
+              "Sorry, This room already booked on this date and time. Check another time",
+          });
+        } else {
           let user = new userModel(req.body);
           let session = await userModel.startSession();
 
@@ -106,17 +116,12 @@ router.post("/book", async (req, res) => {
             .findByIdAndUpdate(
               { _id: req.body.roomId },
               {
-                $push: { bookings: user.id },
+                $addToSet: { bookings: user.id },
               },
               { new: true }
             )
             .session(session);
           return res.json({ user: userDetails, room: roomDetails });
-        } else {
-          return res.json({
-            message:
-              "Sorry, This room already booked on this date and time. Check another time",
-          });
         }
       }
     }
