@@ -96,39 +96,17 @@ router.post("/book", async (req, res) => {
           var d2 = new Date(`${req.body.startDate} ` + `${req.body.startTime}`);
           var d3 = new Date(`${req.body.endDate} ` + `${req.body.endTime}`);
 
-          
-          
-
-         
-      
-// console.log(d0.valueOf());
-// console.log(d1.valueOf());
-// console.log(d2.valueOf());
-// console.log(d3.valueOf());
-
+       
 
 if(d1.valueOf() >d2.valueOf() && d0.valueOf() <d3.valueOf() ){
   return true
 }
        
-          // // const range =a0.diff(a1)
-          // console.log(a0.diff(a1));
-          // console.log(a2.diff(a3));
-          // console.log(a0.diff(a1)==(a2.diff(a3)))
-          // console.log(a0.diff(a1)>(a2.diff(a3)));
-          // console.log(a0.diff(a1)<(a2.diff(a3)));
-        
-
-        // if((d2<=d0&&d3<=d0)||(d3<=d0&&d3<=d1)&&(d2 < d0 && d3 <= d0) || (d2 < d1 && d3 <= d1)){
-        //   return true
-        // }
-          // if ((d0 < d2 && d1 > d3)||((d2 < d0 && d3 <= d0) || (d2 < d1 && d3 <= d1)) ) {    
-          //     return true;
-          // }
+          
        
         });
            
-        // console.log(roomCheck);
+       
 
         if (roomCheck) {
           
