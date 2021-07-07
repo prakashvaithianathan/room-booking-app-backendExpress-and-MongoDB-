@@ -3,7 +3,8 @@ const userModel = require("../../../models").user;
 const roomModel = require("../../../models").room;
 const jwt = require("jsonwebtoken");
 const auth = require("../../../library").authenticate;
-
+const moment = require("moment")
+const momentRange = require("moment-range")
 
 router.get("/", (req, res) => {
   res.send("this is user route");
@@ -60,7 +61,7 @@ router.post("/book", async (req, res) => {
       }
     } else {
       if (checkRoom.bookings) {
-        const room = await userModel.find({ _id: checkRoom.bookings });
+        const room = await userModel.find({ _id: checkRoom.bookings })
 
 
         var startDate = new Date(`${req.body.startDate}`);
@@ -95,17 +96,46 @@ router.post("/book", async (req, res) => {
           var d2 = new Date(`${req.body.startDate} ` + `${req.body.startTime}`);
           var d3 = new Date(`${req.body.endDate} ` + `${req.body.endTime}`);
 
-          if ((d2 < d0 && d3 <= d0) || (d2 < d1 && d3 <= d1)) {
-            return true;
-          }
+          
+          
+
+         
+      
+// console.log(d0.valueOf());
+// console.log(d1.valueOf());
+// console.log(d2.valueOf());
+// console.log(d3.valueOf());
+
+
+if(d1.valueOf() >d2.valueOf() && d0.valueOf() <d3.valueOf() ){
+  return true
+}
+       
+          // // const range =a0.diff(a1)
+          // console.log(a0.diff(a1));
+          // console.log(a2.diff(a3));
+          // console.log(a0.diff(a1)==(a2.diff(a3)))
+          // console.log(a0.diff(a1)>(a2.diff(a3)));
+          // console.log(a0.diff(a1)<(a2.diff(a3)));
+        
+
+        // if((d2<=d0&&d3<=d0)||(d3<=d0&&d3<=d1)&&(d2 < d0 && d3 <= d0) || (d2 < d1 && d3 <= d1)){
+        //   return true
+        // }
+          // if ((d0 < d2 && d1 > d3)||((d2 < d0 && d3 <= d0) || (d2 < d1 && d3 <= d1)) ) {    
+          //     return true;
+          // }
+       
         });
-           console.log(!roomCheck);
+           
+        // console.log(roomCheck);
+
         if (roomCheck) {
           
 
           return res.json({
             message:
-              "Sorry, This room already booked on this date and time. Check another time",
+              `Sorry, This room is booked by ${roomCheck.name} and timing from ${roomCheck.startDate},${roomCheck.startTime} to ${roomCheck.startDate},${roomCheck.endDate, roomCheck.endTime}. Check another time`,
           });
         } else {
           let user = new userModel(req.body);
